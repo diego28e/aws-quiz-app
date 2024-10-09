@@ -8,7 +8,7 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [showFeedback, setShowFeedback] = useState(false);
   const [error, setError] = useState("");
-  const [timer, setTimer] = useState(25);
+  const [timer, setTimer] = useState(60);
   const [score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
@@ -132,7 +132,7 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
       setCurrentQuestion((prev) => prev + 1);
       setSelectedAnswers([]);
       setShowFeedback(false);
-      setTimer(25); // Reset the timer for the next question
+      setTimer(60); // Reset the timer for the next question
       setError("");
       setHasTimeUpOccurred(false); // Reset the time-up flag
     } else {

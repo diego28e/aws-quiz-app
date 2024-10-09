@@ -742,6 +742,313 @@ const questionnaires = [
               "Configurar el Servicio Amazon Connect para alertar a la empresa cuando se supere el umbral",
             ],
           },
+          {
+            question: "¿Qué utiliza Amazon CloudFront para distribuir contenido a usuarios globales con baja latencia?",
+            type: "single",
+            options: [
+              "AWS Global Accelerator",
+              "Regiones de AWS",
+              "Ubicaciones de borde de AWS",
+              "Zonas de disponibilidad de AWS",
+            ],
+          },
+          {
+            question: "¿A qué se refiere el 'Principio de Menor Privilegio'?",
+            type: "single",
+            options: [
+              "Solo debes otorgar a tus usuarios los permisos que necesitan cuando los necesitan y nada más",
+              "Todos los usuarios de IAM deben tener al menos los permisos necesarios para acceder a los servicios principales de AWS",
+              "Todos los usuarios de IAM de confianza deben tener acceso a cualquier servicio de AWS en la cuenta respectiva",
+              "A los usuarios de IAM no se les debe otorgar ningún permiso para mantener tu cuenta segura",
+            ],
+          },
+          {
+            question: "¿Cuál de los siguientes NO pertenece a los modelos de Computación en la Nube de AWS?",
+            type: "single",
+            options: [
+              "Networking as a Service (NaaS)",
+              "Software as a Service (SaaS)",
+              "Infrastructure as a Service (IaaS)",
+              "Platform as a Service (PaaS)",
+            ],
+          },
+          {
+            question: "El proceso de identificación de una empresa de servicios financieros en línea requiere que los nuevos usuarios completen una entrevista en línea con su equipo de seguridad. Las entrevistas grabadas solo se requieren en caso de un problema legal o una infracción de cumplimiento normativo. ¿Cuál es el servicio más rentable para almacenar los videos grabados?",
+            type: "single",
+            options: [
+              "Amazon S3 Glacier Deep Archive",
+              "Amazon EBS",
+              "AWS Marketplace",
+              "S3 Intelligent-Tiering",
+            ],
+          },
+          {
+            question: "¿Qué servicio proporciona DNS en la nube de AWS?",
+            type: "single",
+            options: [
+              "Route 53",
+              "AWS Config",
+              "Amazon CloudFront",
+              "Amazon EMR",
+            ],
+          },
+          {
+            question: "Se registran cientos de miles de ataques DDoS cada mes en todo el mundo. ¿Qué servicio proporciona AWS para ayudar a proteger a los clientes de AWS de estos ataques? (Elige DOS)",
+            type: "multiple",
+            options: [
+              "AWS Shield",
+              "AWS WAF",
+              "AWS Config",
+              "Amazon Cognito",
+              "AWS KMS",
+            ],
+          },
+          {
+            question: "Una empresa está implementando una nueva aplicación web de dos niveles en AWS. ¿Dónde se deben almacenar los datos más accedidos para que el tiempo de respuesta de la aplicación sea óptimo?",
+            type: "single",
+            options: [
+              "Amazon ElastiCache",
+              "Volumen de Amazon EBS",
+              "AWS Storage Gateway",
+              "AWS OpsWorks",
+            ],
+          },
+          {
+            question: "Quieres ejecutar una aplicación de cuestionario por solo un día (sin interrupciones), ¿qué opción de compra de Amazon EC2 deberías utilizar?",
+            type: "single",
+            options: [
+              "Instancias bajo demanda",
+              "Instancias dedicadas",
+              "Instancias spot",
+              "Instancias reservadas",
+            ],
+          },
+          {
+            question: "Estás trabajando en un proyecto que implica crear miniaturas de millones de imágenes. El tiempo de actividad constante no es un problema, y no se requiere procesamiento continuo. ¿Qué opción de compra de EC2 sería la más rentable?",
+            type: "single",
+            options: [
+              "Instancias spot",
+              "Instancias dedicadas",
+              "Instancias bajo demanda",
+              "Instancias reservadas",
+            ],
+          },
+          {
+            question: "¿Cuál de los siguientes puede describirse como un servicio de red de entrega de contenido global (CDN)?",
+            type: "single",
+            options: [
+              "Amazon CloudFront",
+              "Regiones de AWS",
+              "AWS Direct Connect",
+              "AWS VPN",
+            ],
+          },
+          {
+            question: "¿Cuál de los siguientes servicios permite a los clientes gestionar sus acuerdos con AWS?",
+            type: "single",
+            options: [
+              "AWS Artifact",
+              "AWS Certificate Manager",
+              "AWS Systems Manager",
+              "AWS Organizations",
+            ],
+          },
+          {
+            question: "¿Cuál de los siguientes son ejemplos de servicios gestionados por AWS, donde AWS es responsable de las cargas operativas y de mantenimiento del servicio? (Elige DOS)",
+            type: "multiple",
+            options: [
+              "Amazon DynamoDB",
+              "Amazon Elastic MapReduce",
+              "Amazon VPC",
+              "AWS IAM",
+              "Amazon Elastic Compute Cloud",
+            ],
+          },
+          {
+            question: "Tu empresa tiene una aplicación de almacenamiento de datos que requiere acceso a una base de datos NoSQL. ¿Qué oferta de base de datos de AWS cumpliría con este requisito?",
+            type: "single",
+            options: [
+              "Amazon DynamoDB",
+              "Amazon Aurora",
+              "Amazon Elastic Block Store",
+              "Amazon Redshift",
+            ],
+          },
+          {
+            question: "Como parte del plan de soporte Enterprise, ¿quién es el principal punto de contacto para las necesidades de soporte continuas?",
+            type: "single",
+            options: [
+              "Gerente de Cuenta Técnica (TAM)",
+              "Socios Consultores de AWS",
+              "Ingeniero de Gestión de Eventos de Infraestructura (IEM)",
+              "Usuario de AWS Identity and Access Management (IAM)",
+            ],
+          },
+          {
+            question: "¿Cómo puedes ver la distribución del gasto en AWS en una de tus cuentas de AWS?",
+            type: "single",
+            options: [
+              "Usando AWS Cost Explorer",
+              "Usando la consola de Amazon VPC",
+              "Contactando al equipo de Soporte de AWS",
+              "Contactando al equipo de Finanzas de AWS",
+            ],
+          },
+          {
+            question: "¿Qué debe proporcionar un usuario de IAM para interactuar con los servicios de AWS utilizando la Interfaz de Línea de Comandos de AWS (AWS CLI)?",
+            type: "single",
+            options: [
+              "Claves de acceso",
+              "Token secreto",
+              "ID de usuario",
+              "Nombre de usuario y contraseña",
+            ],
+          },
+          {
+            question: "Tienes el soporte básico de AWS, y has descubierto que algunos recursos de AWS están siendo utilizados maliciosamente y esos recursos podrían comprometer tus datos. ¿Qué deberías hacer?",
+            type: "single",
+            options: [
+              "Contactar al equipo de Abuso de AWS",
+              "Contactar al equipo de Servicio al Cliente de AWS",
+              "Contactar al equipo de Conserjería de AWS",
+              "Contactar al equipo de Seguridad de AWS",
+            ],
+          },
+          {
+            question: "Selecciona DOS ejemplos de los controles compartidos de AWS",
+            type: "multiple",
+            options: [
+              "Gestión de parches",
+              "Gestión de configuración",
+              "Operaciones del centro de datos",
+              "Gestión de VPC",
+              "Gestión de IAM",
+            ],
+          },
+          {
+            question: "Para implementar las mejores prácticas al tratar con un “Punto Único de Fallo”, deberías intentar automatizar lo más posible tanto la detección como la reacción ante fallos. ¿Cuál de los siguientes servicios de AWS ayudaría? (Elige DOS)",
+            type: "multiple",
+            options: [
+              "ELB",
+              "Auto Scaling",
+              "Amazon Athena",
+              "ECR",
+              "Amazon EC2",
+            ],
+          },
+          {
+            question: "Una empresa planea alojar un sitio web educativo en AWS. Sus cursos en video serán transmitidos en todo el mundo. ¿Cuál de los siguientes servicios de AWS ayudará a lograr altas velocidades de transferencia?",
+            type: "single",
+            options: [
+              "Amazon CloudFront",
+              "AWS CloudFormation",
+              "Amazon Kinesis Video Streams",
+              "Amazon SNS",
+            ],
+          },
+          {
+            question: "Un desarrollador está planeando construir una aplicación web de dos niveles que tenga una capa de base de datos MySQL. ¿Cuál de los siguientes servicios de base de datos de AWS proporcionaría copias de seguridad automáticas para la aplicación?",
+            type: "single",
+            options: [
+              "Amazon Aurora",
+              "Amazon DynamoDB",
+              "Amazon Neptune",
+              "Una base de datos MySQL instalada en una instancia EC2",
+            ],
+          },
+          {
+            question: "¿Cuál es el servicio de AWS que permite a los arquitectos de AWS gestionar la infraestructura como código?",
+            type: "single",
+            options: [
+              "AWS CloudFormation",
+              "AWS Config",
+              "Amazon SES",
+              "Amazon EMR",
+            ],
+          },
+          {
+            question: "Bajo el modelo de responsabilidad compartida, ¿cuál de los siguientes es responsabilidad de AWS?",
+            type: "single",
+            options: [
+              "Configurar los dispositivos de infraestructura",
+              "Cifrado del lado del cliente",
+              "Cifrado del lado del servidor",
+              "Filtrado de tráfico con Grupos de Seguridad",
+            ],
+          },
+          {
+            question: "¿Qué proporciona el Panel de Salud de AWS? (Elige DOS)",
+            type: "multiple",
+            options: [
+              "Guía detallada de solución de problemas para abordar eventos de AWS que afectan a tus recursos",
+              "Vista personalizada del estado de los servicios de AWS",
+              "Verificaciones de salud para instancias de Auto Scaling",
+              "Recomendaciones para la optimización de costos",
+              "Un panel que detalla vulnerabilidades en tus aplicaciones",
+            ],
+          },
+          {
+            question: "Has implementado tu aplicación en varias instancias de Amazon EC2. Tus clientes se quejan de que a veces no pueden acceder a tu aplicación. ¿Qué servicio de AWS te permite monitorear el rendimiento de tus instancias EC2 para ayudar a resolver estos problemas?",
+            type: "single",
+            options: [
+              "Amazon CloudWatch",
+              "AWS CloudTrail",
+              "AWS Config",
+              "AWS Lambda",
+            ],
+          },
+          {
+            question: "Tu empresa está desarrollando una aplicación web crítica en AWS, y la seguridad de la aplicación es una de las principales prioridades. ¿Cuál de los siguientes servicios de AWS proporcionará recomendaciones de optimización de seguridad de la infraestructura?",
+            type: "single",
+            options: [
+              "AWS Trusted Advisor",
+              "AWS Secrets Manager",
+              "Consola de gestión de AWS",
+              "AWS Shield",
+            ],
+          },
+          {
+            question: "¿Cuál de los siguientes NO es un beneficio de Amazon S3? (Elige DOS)",
+            type: "multiple",
+            options: [
+              "Amazon S3 puede ejecutar cualquier tipo de aplicación o sistema backend",
+              "Amazon S3 se puede escalar manualmente para almacenar y recuperar cualquier cantidad de datos desde cualquier lugar",
+              "Amazon S3 proporciona 99.999999999% (11 nueves) de durabilidad de los datos",
+              "Amazon S3 almacena cualquier número de objetos, pero con límites de tamaño de objeto",
+              "Amazon S3 proporciona almacenamiento ilimitado para cualquier tipo de datos",
+            ],
+          },
+          {
+            question: "En el Modelo de Responsabilidad Compartida de AWS, ¿cuál de las siguientes es responsabilidad del cliente? (Elige DOS)",
+            type: "multiple",
+            options: [
+              "Establecer reglas de complejidad de contraseñas",
+              "Configurar reglas de acceso a la red",
+              "Aplicar parches a la infraestructura de red",
+              "Controlar el acceso físico a los recursos de cómputo",
+              "Eliminación de discos",
+            ],
+          },
+          {
+            question: "¿Qué proporciona AWS para implementar tecnologías populares como IBM MQ en AWS con el menor esfuerzo y tiempo posible?",
+            type: "single",
+            options: [
+              "Implementaciones de referencia de AWS Quick Start",
+              "AWS OpsWorks",
+              "Amazon CloudWatch",
+              "Amazon Aurora",
+            ],
+          },
+          {
+            question: "Una organización ha decidido comprar una instancia reservada de Amazon EC2 (RI) por tres años para reducir costos. Es posible que las cargas de trabajo de la aplicación cambien durante el período de reserva. ¿Cuál es el tipo de instancia reservada (RI) de EC2 que permitirá a la empresa intercambiar la instancia reservada comprada por otra instancia reservada con mayor potencia de cómputo si es necesario?",
+            type: "single",
+            options: [
+              "RI Convertible",
+              "RI Estándar",
+              "RI Premium",
+              "RI Elástica",
+            ],
+          },         
 
       ],
     },
