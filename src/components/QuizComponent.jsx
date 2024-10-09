@@ -8,10 +8,11 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [showFeedback, setShowFeedback] = useState(false);
   const [error, setError] = useState("");
-  const [timer, setTimer] = useState(45);
+  const [timer, setTimer] = useState(25);
   const [score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
+  const [hasTimeUpOccurred, setHasTimeUpOccurred] = useState(false);
 
   useEffect(() => {
     // Shuffle the options for each question when component mounts
@@ -25,16 +26,23 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
   }, [questions]);
 
   useEffect(() => {
+    if (showFeedback || hasTimeUpOccurred) return; // Stop the timer when feedback is shown or time-up occurred
+  
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
-        if (prevTimer > 0) return prevTimer - 1;
-        handleQuizEnd();
-        return 0;
+        if (prevTimer > 0) {
+          return prevTimer - 1;
+        } else {
+          // Time's up
+          handleTimeUp();
+          return 0;
+        }
       });
     }, 1000);
-
+  
     return () => clearInterval(interval);
-  }, [currentQuestion]);
+  }, [currentQuestion, showFeedback, hasTimeUpOccurred]);
+  
 
   const shuffleArray = (array) => {
     return array.sort(() => Math.random() - 0.5);
@@ -81,6 +89,7 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
 
     setShowFeedback(true);
     setError("");
+    setHasTimeUpOccurred(false); // Reset the time-up flag
 
     // Determine the correct answers
     const correctAnswers = [];
@@ -110,12 +119,22 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
     }
   };
 
+  const handleTimeUp = () => {
+    setShowFeedback(true);
+    setError("");
+    setHasTimeUpOccurred(true); // Indicate that time-up has occurred
+  };
+  
+  
+
   const handleNextQuestion = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
       setSelectedAnswers([]);
       setShowFeedback(false);
-      setTimer(45);
+      setTimer(25); // Reset the timer for the next question
+      setError("");
+      setHasTimeUpOccurred(false); // Reset the time-up flag
     } else {
       handleQuizEnd();
     }
