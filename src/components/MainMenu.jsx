@@ -4,10 +4,11 @@ import React from "react";
 
 const MainMenu = ({ questionnaires, onSelect }) => {
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-gradient-to-r from-theme-color-primary to-theme-color-primary-dark rounded-lg shadow-lg menu-box">
+    <div className="text-center max-w-2xl mx-auto p-6 bg-gradient-to-r from-theme-color-primary to-theme-color-primary-dark rounded-lg shadow-lg menu-box">
       <h1 className="text-4xl font-bold text-center text-theme-color-base mb-8">
         AWS Quiz App
       </h1>
+      <span className="text-center text-theme-color-base">Answer each question in less than 60 seconds</span>
       <div className="space-y-4">
         {questionnaires.map((quiz) => (
           <button

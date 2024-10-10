@@ -605,7 +605,7 @@ const questionnaires = [
               "Desplegar la aplicación en múltiples Regiones y Zonas de Disponibilidad.",
               "Desplegar la aplicación en múltiples VPC y subredes.",
               "Desplegar la aplicación en múltiples Zonas de Disponibilidad y subredes.",
-              "Desplegar la aplicación en múltiples Zonas de Disponibilidad y ubicaciones Edge.",
+              "Desplegar la aplicación en múltiples Zonas de Disponibilidad y ubicaciones de borde.",
             ],
           },
           {
