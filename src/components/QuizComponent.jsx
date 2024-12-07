@@ -169,10 +169,8 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
 
     setScore((prev) => prev + questionScore);
 
-    // Check if this is the last question
-    if (currentQuestion === questions.length - 1) {
-      handleQuizEnd();
-    }
+    // Do NOT end quiz here even if it's the last question
+    // Just show feedback. The user will click "Finish Quiz" after seeing feedback.
   };
 
   const handleTimeUp = () => {
@@ -195,8 +193,12 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
         setTimer(60); // reset timer only if exam mode
       }
     } else {
-      handleQuizEnd();
+      // If this is the last question, now show the Finish Quiz button instead of calling handleQuizEnd immediately
     }
+  };
+
+  const handleFinishQuiz = () => {
+    handleQuizEnd();
   };
 
   const handleQuizEnd = () => {
@@ -239,6 +241,11 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
       correctAnswersForUI.push(correctIndex);
     }
   }
+
+  const scaledScore =
+    totalPossiblePoints > 0
+      ? Math.round((score / totalPossiblePoints) * 1000)
+      : 0;
 
   // If no mode selected yet, show mode selection buttons with tooltips
   if (!selectedMode) {
@@ -375,18 +382,21 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
             )}
 
           <div className="flex justify-between items-center">
-            <button
-              onClick={handleSubmit}
-              className={`bg-theme-color-secondary text-theme-color-primary font-bold py-2 px-4 rounded-md ${
-                !showFeedback && !error
-                  ? "hover:bg-theme-color-secondary-dark cursor-pointer"
-                  : "opacity-50 cursor-not-allowed"
-              } transition-colors focus:outline-none focus:ring-2 focus:ring-theme-color-secondary focus:ring-opacity-50`}
-              disabled={showFeedback || !!error}
-            >
-              Submit
-            </button>
+            {!showFeedback && (
+              <button
+                onClick={handleSubmit}
+                className={`bg-theme-color-secondary text-theme-color-primary font-bold py-2 px-4 rounded-md ${
+                  !error
+                    ? "hover:bg-theme-color-secondary-dark cursor-pointer"
+                    : "opacity-50 cursor-not-allowed"
+                } transition-colors focus:outline-none focus:ring-2 focus:ring-theme-color-secondary focus:ring-opacity-50`}
+                disabled={showFeedback || !!error}
+              >
+                Submit
+              </button>
+            )}
 
+            {/* If not last question and feedback shown, show Next Question button */}
             {showFeedback && currentQuestion < questions.length - 1 && (
               <button
                 onClick={handleNextQuestion}
@@ -395,15 +405,18 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
                 Next Question
               </button>
             )}
+
+            {/* If last question and feedback shown, show Finish Quiz button */}
             {showFeedback && currentQuestion === questions.length - 1 && (
               <button
-                onClick={handleQuizEnd}
+                onClick={handleFinishQuiz}
                 className="bg-theme-color-neutral text-white font-bold py-2 px-4 rounded-md hover:bg-theme-color-neutral-dark transition-colors focus:outline-none focus:ring-2 focus:ring-theme-color-neutral focus:ring-opacity-50"
               >
                 Finish Quiz
               </button>
             )}
-            {selectedMode === "exam" && (
+
+            {selectedMode === "exam" && !quizFinished && (
               <div className="text-theme-color-base text-xl font-bold">
                 {timer}s
               </div>
@@ -416,7 +429,7 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
             Quiz Finished!
           </h2>
           <p className="text-xl text-theme-color-base mb-2">
-            Total Score: {score} / {totalPossiblePoints}
+            Total Score: {scaledScore}/1000
           </p>
           <p className="text-xl text-theme-color-base mb-4">
             Score Percentage:{" "}
