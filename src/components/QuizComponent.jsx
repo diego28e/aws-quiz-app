@@ -4,49 +4,81 @@ import React, { useState, useEffect } from "react";
 import { FaCheck, FaTimes } from "react-icons/fa";
 
 const QuizComponent = ({ questions, onQuizEnd }) => {
+  // Add a piece of state to store the selected mode
+  const [selectedMode, setSelectedMode] = useState(null); // 'practice' or 'exam'
+
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [showFeedback, setShowFeedback] = useState(false);
   const [error, setError] = useState("");
-  const [timer, setTimer] = useState(60);
+
+  // Initialize timer based on mode (exam=60 seconds per question, practice=no timer)
+  const [timer, setTimer] = useState(selectedMode === "exam" ? 60 : null);
+
   const [score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
   const [hasTimeUpOccurred, setHasTimeUpOccurred] = useState(false);
 
   useEffect(() => {
-    // Shuffle the options for each question when component mounts
-    const shuffled = questions.map((question) => {
-      return {
-        ...question,
-        options: shuffleArray([...question.options]),
-      };
-    });
-    setShuffledQuestions(shuffled);
-  }, [questions]);
+    // Only shuffle if we have questions and selectedMode chosen
+    if (questions && questions.length > 0 && selectedMode) {
+      const shuffled = questions.map((question) => {
+        return {
+          ...question,
+          options: shuffleArray([...question.options]),
+        };
+      });
+      setShuffledQuestions(shuffled);
+    }
+  }, [questions, selectedMode]);
 
   useEffect(() => {
-    if (showFeedback || hasTimeUpOccurred) return; // Stop the timer when feedback is shown or time-up occurred
-  
-    const interval = setInterval(() => {
-      setTimer((prevTimer) => {
-        if (prevTimer > 0) {
-          return prevTimer - 1;
-        } else {
-          // Time's up
-          handleTimeUp();
-          return 0;
-        }
-      });
-    }, 1000);
-  
-    return () => clearInterval(interval);
-  }, [currentQuestion, showFeedback, hasTimeUpOccurred]);
-  
+    // Run the timer only if exam mode is selected and feedback/time-up hasn't occurred
+    if (
+      selectedMode === "exam" &&
+      !showFeedback &&
+      !hasTimeUpOccurred &&
+      !quizFinished &&
+      shuffledQuestions.length > 0
+    ) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer > 0) {
+            return prevTimer - 1;
+          } else {
+            // Time's up
+            handleTimeUp();
+            return 0;
+          }
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [
+    currentQuestion,
+    showFeedback,
+    hasTimeUpOccurred,
+    quizFinished,
+    selectedMode,
+    shuffledQuestions,
+  ]);
 
   const shuffleArray = (array) => {
     return array.sort(() => Math.random() - 0.5);
   };
+
+  const handleModeSelect = (mode) => {
+    setSelectedMode(mode);
+    // Set timer if exam mode
+    if (mode === "exam") {
+      setTimer(60);
+    } else {
+      setTimer(null);
+    }
+  };
+
+  const currentQuizQuestion = shuffledQuestions[currentQuestion];
 
   const handleAnswerSelect = (index) => {
     const questionType = currentQuizQuestion.type;
@@ -54,47 +86,71 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
       setSelectedAnswers([index]);
       setError("");
     } else if (questionType === "multiple") {
+      // multiple means must select exactly 2
       setSelectedAnswers((prevSelected) => {
         if (prevSelected.includes(index)) {
-          // Deselect the option
           const newSelected = prevSelected.filter((i) => i !== index);
-          setError(""); // Clear error when an option is deselected
+          setError("");
           return newSelected;
         } else {
           if (prevSelected.length >= 2) {
             setError("You can only choose two options.");
-            return prevSelected; // Do not add the new selection
+            return prevSelected;
           } else {
             const newSelected = [...prevSelected, index];
-            setError(""); // Clear error if selection is valid
+            setError("");
+            return newSelected;
+          }
+        }
+      });
+    } else if (questionType === "multiple3") {
+      // multiple3 means must select exactly 3
+      setSelectedAnswers((prevSelected) => {
+        if (prevSelected.includes(index)) {
+          const newSelected = prevSelected.filter((i) => i !== index);
+          setError("");
+          return newSelected;
+        } else {
+          if (prevSelected.length >= 3) {
+            setError("You can only choose three options.");
+            return prevSelected;
+          } else {
+            const newSelected = [...prevSelected, index];
+            setError("");
             return newSelected;
           }
         }
       });
     }
   };
-  
+
   const handleSubmit = () => {
-    const requiredAnswersCount =
-    currentQuizQuestion.type === "multiple" ? 2 : 1;
-  
-  if (selectedAnswers.length !== requiredAnswersCount) {
-    setError(
-      `Please select exactly ${requiredAnswersCount} option${
-        requiredAnswersCount > 1 ? "s" : ""
-      } before submitting.`
-    );
-    return;
-  }
+    if (!currentQuizQuestion) return;
+
+    // Determine required number of correct answers based on type
+    let requiredAnswersCount = 1;
+    if (currentQuizQuestion.type === "multiple") requiredAnswersCount = 2;
+    if (currentQuizQuestion.type === "multiple3") requiredAnswersCount = 3;
+
+    if (selectedAnswers.length !== requiredAnswersCount) {
+      setError(
+        `Please select exactly ${requiredAnswersCount} option${
+          requiredAnswersCount > 1 ? "s" : ""
+        } before submitting.`
+      );
+      return;
+    }
 
     setShowFeedback(true);
     setError("");
     setHasTimeUpOccurred(false); // Reset the time-up flag
 
-    // Determine the correct answers
+    // Determine the correct answers based on question type
+    let numCorrectOptions = 1;
+    if (currentQuizQuestion.type === "multiple") numCorrectOptions = 2;
+    if (currentQuizQuestion.type === "multiple3") numCorrectOptions = 3;
+
     const correctAnswers = [];
-    const numCorrectOptions =
-      currentQuizQuestion.type === "multiple" ? 2 : 1;
     for (let i = 0; i < numCorrectOptions; i++) {
       const correctOption = questions[currentQuestion].options[i];
       const correctIndex = shuffledQuestions[currentQuestion].options.findIndex(
@@ -120,21 +176,24 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
   };
 
   const handleTimeUp = () => {
-    setShowFeedback(true);
-    setError("");
-    setHasTimeUpOccurred(true); // Indicate that time-up has occurred
+    // Only matters if exam mode
+    if (selectedMode === "exam") {
+      setShowFeedback(true);
+      setError("");
+      setHasTimeUpOccurred(true);
+    }
   };
-  
-  
 
   const handleNextQuestion = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
       setSelectedAnswers([]);
       setShowFeedback(false);
-      setTimer(60); // Reset the timer for the next question
       setError("");
-      setHasTimeUpOccurred(false); // Reset the time-up flag
+      setHasTimeUpOccurred(false);
+      if (selectedMode === "exam") {
+        setTimer(60); // reset timer only if exam mode
+      }
     } else {
       handleQuizEnd();
     }
@@ -145,39 +204,78 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
   };
 
   const handleReturnToMenu = () => {
-    // Reset all state
+    // Reset all state back to initial
+    setSelectedMode(null);
     setCurrentQuestion(0);
     setSelectedAnswers([]);
     setShowFeedback(false);
     setError("");
-    setTimer(30);
+    setTimer(selectedMode === "exam" ? 60 : null);
     setScore(0);
     setQuizFinished(false);
     setShuffledQuestions([]);
-    onQuizEnd(); // Notify parent to return to menu
+    if (onQuizEnd) onQuizEnd();
   };
-
-  const currentQuizQuestion = shuffledQuestions[currentQuestion];
 
   // Calculate total possible points
   const totalPossiblePoints = questions.reduce((total, question) => {
-    return total + (question.type === "multiple" ? 2 : 1);
+    if (question.type === "multiple") return total + 2;
+    if (question.type === "multiple3") return total + 3;
+    return total + 1;
   }, 0);
 
-  // Determine the correct answers
-  let correctAnswers = [];
+  // Determine the correct answers for UI feedback
+  let correctAnswersForUI = [];
   if (currentQuizQuestion) {
-    const numCorrectOptions =
-      currentQuizQuestion.type === "multiple" ? 2 : 1;
+    let numCorrectOptions = 1;
+    if (currentQuizQuestion.type === "multiple") numCorrectOptions = 2;
+    if (currentQuizQuestion.type === "multiple3") numCorrectOptions = 3;
+
     for (let i = 0; i < numCorrectOptions; i++) {
       const correctOption = questions[currentQuestion].options[i];
       const correctIndex = shuffledQuestions[currentQuestion].options.findIndex(
         (option) => option === correctOption
       );
-      correctAnswers.push(correctIndex);
+      correctAnswersForUI.push(correctIndex);
     }
   }
 
+  // If no mode selected yet, show mode selection buttons with tooltips
+  if (!selectedMode) {
+    return (
+      <div className="max-w-2xl mx-auto p-6 bg-gradient-to-r from-theme-color-primary to-theme-color-primary-dark rounded-lg shadow-lg text-center">
+        <h2 className="text-2xl font-bold text-theme-color-base mb-4">
+          Select Mode
+        </h2>
+        <div className="flex space-x-4 justify-center">
+          <div className="relative group">
+            <button
+              onClick={() => handleModeSelect("practice")}
+              className="bg-theme-color-neutral text-white font-bold py-2 px-4 rounded-md hover:bg-theme-color-neutral-dark transition-colors focus:outline-none focus:ring-2 focus:ring-theme-color-neutral focus:ring-opacity-50"
+            >
+              Practice Mode
+            </button>
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full bg-black text-white text-sm p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity w-48 text-center z-10">
+              Practice mode has no time limit.
+            </div>
+          </div>
+          <div className="relative group">
+            <button
+              onClick={() => handleModeSelect("exam")}
+              className="bg-theme-color-secondary text-theme-color-primary font-bold py-2 px-4 rounded-md hover:bg-theme-color-secondary-dark transition-colors focus:outline-none focus:ring-2 focus:ring-theme-color-secondary focus:ring-opacity-50"
+            >
+              Exam Mode
+            </button>
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full bg-black text-white text-sm p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity w-48 text-center z-10">
+              Exam mode has a time limit for each question.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Once mode is selected, proceed with the original quiz rendering
   return (
     <div className="max-w-2xl mx-auto p-6 bg-gradient-to-r from-theme-color-primary to-theme-color-primary-dark rounded-lg shadow-lg quiz-box">
       {!quizFinished && currentQuizQuestion ? (
@@ -213,7 +311,7 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
                       : "bg-theme-color-base-dark text-theme-color-base hover:bg-theme-color-secondary hover:text-theme-color-primary"
                   } ${
                     showFeedback
-                      ? correctAnswers.includes(index)
+                      ? correctAnswersForUI.includes(index)
                         ? "bg-green-500 text-white"
                         : selectedAnswers.includes(index)
                         ? "bg-red-500 text-white"
@@ -223,7 +321,8 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
                 >
                   <input
                     type={
-                      currentQuizQuestion.type === "multiple"
+                      currentQuizQuestion.type === "multiple" ||
+                      currentQuizQuestion.type === "multiple3"
                         ? "checkbox"
                         : "radio"
                     }
@@ -235,11 +334,11 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
                     aria-label={`Option ${index + 1}: ${option}`}
                   />
                   <span className="flex-1">{option}</span>
-                  {showFeedback && correctAnswers.includes(index) && (
+                  {showFeedback && correctAnswersForUI.includes(index) && (
                     <FaCheck className="text-green-700 ml-2" />
                   )}
                   {showFeedback &&
-                    !correctAnswers.includes(index) &&
+                    !correctAnswersForUI.includes(index) &&
                     selectedAnswers.includes(index) && (
                       <FaTimes className="text-red-700 ml-2" />
                     )}
@@ -250,18 +349,43 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
 
           {error && <p className="text-red-500 mb-4">{error}</p>}
 
+          {/* Feedback Section: display if showFeedback is true and feedback exists */}
+          {showFeedback &&
+            currentQuizQuestion.feedback &&
+            currentQuizQuestion.feedback.length > 0 && (
+              <div className="mb-4 mt-4 border-t border-theme-color-base-dark pt-4">
+                <h4 className="text-lg font-semibold text-theme-color-base mb-2">
+                  Learn More:
+                </h4>
+                <ul className="list-disc list-inside space-y-1">
+                  {currentQuizQuestion.feedback.map((link, i) => (
+                    <li key={i}>
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#fde047] underline hover:text-[#f59e0b]"
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
           <div className="flex justify-between items-center">
-          <button
-  onClick={handleSubmit}
-  className={`bg-theme-color-secondary text-theme-color-primary font-bold py-2 px-4 rounded-md ${
-    !showFeedback && !error
-      ? "hover:bg-theme-color-secondary-dark cursor-pointer"
-      : "opacity-50 cursor-not-allowed"
-  } transition-colors focus:outline-none focus:ring-2 focus:ring-theme-color-secondary focus:ring-opacity-50`}
-  disabled={showFeedback || !!error}
->
-  Submit
-</button>
+            <button
+              onClick={handleSubmit}
+              className={`bg-theme-color-secondary text-theme-color-primary font-bold py-2 px-4 rounded-md ${
+                !showFeedback && !error
+                  ? "hover:bg-theme-color-secondary-dark cursor-pointer"
+                  : "opacity-50 cursor-not-allowed"
+              } transition-colors focus:outline-none focus:ring-2 focus:ring-theme-color-secondary focus:ring-opacity-50`}
+              disabled={showFeedback || !!error}
+            >
+              Submit
+            </button>
 
             {showFeedback && currentQuestion < questions.length - 1 && (
               <button
@@ -279,9 +403,11 @@ const QuizComponent = ({ questions, onQuizEnd }) => {
                 Finish Quiz
               </button>
             )}
-            <div className="text-theme-color-base text-xl font-bold">
-              {timer}s
-            </div>
+            {selectedMode === "exam" && (
+              <div className="text-theme-color-base text-xl font-bold">
+                {timer}s
+              </div>
+            )}
           </div>
         </>
       ) : (
