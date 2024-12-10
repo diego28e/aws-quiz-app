@@ -1,6 +1,7 @@
 // src/components/MainMenu.jsx
 
 import React from "react";
+import { BsDisplay } from "react-icons/bs";
 
 const MainMenu = ({ questionnaires, onSelect }) => {
   return (
@@ -8,7 +9,12 @@ const MainMenu = ({ questionnaires, onSelect }) => {
       <h1 className="text-4xl font-bold text-center text-theme-color-base mb-8">
         AWS Quiz App
       </h1>
-      <span className="text-center text-theme-color-base">Answer each question in less than 60 seconds</span>
+      <span
+        style={{ marginBottom: "20px", display: "block" }}
+        className="text-center text-theme-color-base"
+      >
+        Developed by Diego Espinosa
+      </span>
       <div className="space-y-4">
         {questionnaires.map((quiz) => (
           <button
